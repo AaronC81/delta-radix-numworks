@@ -9,3 +9,5 @@ crate-type = ["staticlib"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+delta-radix-hal = { git="https://github.com/AaronC81/delta-radix" }
+delta-radix-os = { git="https://github.com/AaronC81/delta-radix" }
