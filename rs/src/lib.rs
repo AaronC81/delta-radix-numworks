@@ -33,7 +33,9 @@ pub extern "C" fn rs_main() {
             x: 0,
             y: 0,
         },
-        keypad: NumWorksKeypad,
+        keypad: NumWorksKeypad {
+            pressed_key: None,
+        },
         time: NumWorksTime,
     };
     executor::execute(delta_radix_os::main(&mut hal))

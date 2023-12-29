@@ -38,7 +38,9 @@ impl Display for NumWorksDisplay {
     }
 }
 
-pub struct NumWorksKeypad;
+pub struct NumWorksKeypad {
+    pub pressed_key: Option<delta_radix_hal::Key>,
+}
 impl NumWorksKeypad {
     fn poll_mapped_key() -> Option<delta_radix_hal::Key> {
         let scan = input::keyboard_scan();
@@ -95,8 +97,14 @@ impl Keypad for NumWorksKeypad {
     async fn wait_key(&mut self) -> delta_radix_hal::Key {
         loop {
             if let Some(key) = NumWorksKeypad::poll_mapped_key() {
-                eadk::timing::msleep(200);
-                return key;
+                if self.pressed_key.is_some() && key == self.pressed_key.unwrap() {
+                    // Debounce, do nothing
+                } else {
+                    self.pressed_key = Some(key);
+                    return key;
+                }
+            } else {
+                self.pressed_key = None;
             }
         }
     }
