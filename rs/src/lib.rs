@@ -18,15 +18,6 @@ static MALLOCATOR: Mallocator = Mallocator;
 
 #[no_mangle]
 pub extern "C" fn rs_main() {
-    // Rectangle test
-    display::fill(Rect::SCREEN, Color::WHITE);
-    display::fill(
-        Rect { x: 10, y: 10, width: 10, height: 10 },
-        Color(0xe426),
-    );
-
-    timing::msleep(1000);
-
     // Run Radix app
     let mut hal = NumWorksHal {
         display: NumWorksDisplay {

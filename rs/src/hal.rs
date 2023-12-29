@@ -19,7 +19,7 @@ impl Display for NumWorksDisplay {
     fn print_char(&mut self, c: char) {
         display::write_string(
             &c.to_string(),
-            Point { x: 15 * (self.x as u16), y: 15 * (self.y as u16) },
+            Point { x: 55 + 10 * (self.x as u16), y: 70 + 15 * (self.y as u16) },
             Font::Large,
             Color::BLACK,
             Color::WHITE,
