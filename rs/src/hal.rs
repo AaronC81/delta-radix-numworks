@@ -39,13 +39,64 @@ impl Display for NumWorksDisplay {
 }
 
 pub struct NumWorksKeypad;
+impl NumWorksKeypad {
+    fn poll_mapped_key() -> Option<delta_radix_hal::Key> {
+        let scan = input::keyboard_scan();
+
+        let mapping = [
+            (Key::Zero,  delta_radix_hal::Key::Digit(0)),
+            (Key::One,   delta_radix_hal::Key::Digit(1)),
+            (Key::Two,   delta_radix_hal::Key::Digit(2)),
+            (Key::Three, delta_radix_hal::Key::Digit(3)),
+            (Key::Four,  delta_radix_hal::Key::Digit(4)),
+            (Key::Five,  delta_radix_hal::Key::Digit(5)),
+            (Key::Six,   delta_radix_hal::Key::Digit(6)),
+            (Key::Seven, delta_radix_hal::Key::Digit(7)),
+            (Key::Eight, delta_radix_hal::Key::Digit(8)),
+            (Key::Nine,  delta_radix_hal::Key::Digit(9)),
+
+            // These are the letter keys for A-F
+            (Key::Exp,       delta_radix_hal::Key::Digit(0xa)),
+            (Key::Ln,        delta_radix_hal::Key::Digit(0xb)),
+            (Key::Log,       delta_radix_hal::Key::Digit(0xc)),
+            (Key::Imaginary, delta_radix_hal::Key::Digit(0xd)),
+            (Key::Comma,     delta_radix_hal::Key::Digit(0xe)),
+            (Key::Power,     delta_radix_hal::Key::Digit(0xf)),
+
+            (Key::Shift, delta_radix_hal::Key::Shift),
+            (Key::Exe,   delta_radix_hal::Key::Exe),
+
+            (Key::Plus,             delta_radix_hal::Key::Add),
+            (Key::Minus,            delta_radix_hal::Key::Subtract),
+            (Key::Multiplication,   delta_radix_hal::Key::Multiply),
+            (Key::Division,         delta_radix_hal::Key::Divide),
+
+            (Key::Toolbox, delta_radix_hal::Key::Menu),
+            (Key::Var,     delta_radix_hal::Key::Variable),
+
+            (Key::Left,      delta_radix_hal::Key::Left),
+            (Key::Right,     delta_radix_hal::Key::Right),
+            (Key::Backspace, delta_radix_hal::Key::Delete),
+
+            (Key::Ee,  delta_radix_hal::Key::HexBase),
+            (Key::Dot, delta_radix_hal::Key::BinaryBase),
+            (Key::Ans, delta_radix_hal::Key::FormatSelect),
+        ];
+
+        for (from, to) in mapping {
+            if scan.is_pressed(from) {
+                return Some(to);
+            }
+        }
+        None
+    }
+}
 impl Keypad for NumWorksKeypad {
     async fn wait_key(&mut self) -> delta_radix_hal::Key {
-        // Wait forever!        
         loop {
-            if input::keyboard_scan().is_pressed(Key::One) {
-                eadk::timing::msleep(100);
-                return delta_radix_hal::Key::Digit(1)
+            if let Some(key) = NumWorksKeypad::poll_mapped_key() {
+                eadk::timing::msleep(200);
+                return key;
             }
         }
     }
